@@ -1,6 +1,8 @@
 package com.example.spring_data_jpa.repository;
 
+import com.example.spring_data_jpa.dto.MemberDto;
 import com.example.spring_data_jpa.entity.Member;
+import com.example.spring_data_jpa.entity.Team;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +24,9 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
 
     @Test
     public void testMember() {
@@ -86,5 +92,33 @@ class MemberRepositoryTest {
         List<Member> result = memberRepository.findUser("aaa",10);
 
         assertThat(result.get(0)).isEqualTo(m1);
+    }
+
+    @Test
+    public void findMemberDto() {
+        Team team = new Team("teamA");
+        teamRepository.save(team);
+
+        Member m1 = new Member("aaa",10);
+        m1.setTeam(team);
+        memberRepository.save(m1);
+
+        List<MemberDto> result = memberRepository.findMemberDto();
+
+        assertThat(result.get(0)).isEqualTo(new MemberDto(m1.getId(),m1.getUsername(),team.getName()));
+    }
+
+    @Test
+    public void findByNames() {
+
+
+        Member m1 = new Member("aaa",10);
+        Member m2 = new Member("bbb",20);
+        Member m3 = new Member("ccc",30);
+        memberRepository.save(m1);
+
+        List<Member> result = memberRepository.findByNames(Arrays.asList("aaa","bbb"));
+
+//        assertThat(result.get(0)).isEqualTo(new MemberDto(m1.getId(),m1.getUsername(),team.getName()));
     }
 }
