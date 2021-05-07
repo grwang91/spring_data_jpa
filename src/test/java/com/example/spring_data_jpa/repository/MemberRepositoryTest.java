@@ -121,4 +121,24 @@ class MemberRepositoryTest {
 
 //        assertThat(result.get(0)).isEqualTo(new MemberDto(m1.getId(),m1.getUsername(),team.getName()));
     }
+
+    @Test
+    public void returnType() {
+
+
+        Member m1 = new Member("aaa",10);
+        Member m2 = new Member("bbb",20);
+        Member m3 = new Member("ccc",30);
+        memberRepository.save(m1);
+
+        List<Member> aaa = memberRepository.findListByUsername("aaa");
+        Member findMember = memberRepository.findMemberByUsername("aaa");
+        Optional<Member> optionalMember = memberRepository.findOptioinalByUsername("aaa");
+
+        assertThat(aaa.get(0)).isEqualTo(m1);
+        assertThat(findMember).isEqualTo(m1);
+        assertThat(optionalMember.get()).isEqualTo(m1);
+
+
+    }
 }
